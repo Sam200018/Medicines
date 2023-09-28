@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medicines/config/constants/colors.dart';
+import 'package:medicines/config/router/router.dart';
 import 'package:medicines/ui/pages/login/widgets/pills_button.dart';
 import 'package:medicines/ui/pages/login/widgets/pills_image.dart';
 import 'package:medicines/ui/pages/login/widgets/pills_input.dart';
@@ -15,16 +17,17 @@ class LoginPage extends StatelessWidget {
         child: PillsTextButton(
           text: "Crear una nueva cuenta",
           fontSize: 20.0,
-          onPress: () {},
+          onPress: () {
+            context.push(MedicinesRouter.signup);
+          },
         ),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
+          padding: const EdgeInsets.only(top: 40, left: 30, right: 30),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const SizedBox(height: 50),
               const LogoPills(),
               PillsInput(
                 textController: TextEditingController(),
@@ -45,7 +48,9 @@ class LoginPage extends StatelessWidget {
                   PillsTextButton(
                       text: "Reestablecer contreseña",
                       fontSize: 15.0,
-                      onPress: () {}),
+                      onPress: () {
+                        // context.go(location)
+                      }),
                 ],
               ),
               const SizedBox(height: 32),
