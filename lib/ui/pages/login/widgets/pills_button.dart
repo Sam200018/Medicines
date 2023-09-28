@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medicines/config/constants/colors.dart';
 
 class PillsButton extends StatelessWidget {
   final VoidCallback? onPress;
@@ -27,8 +28,9 @@ class PillsButton extends StatelessWidget {
         style: OutlinedButton.styleFrom(
           backgroundColor: color,
           foregroundColor: textColor,
+          disabledBackgroundColor: mainButtonDisable
         ),
-        onPressed: () {},
+        onPressed: onPress,
         child: Text(
           text,
           style: const TextStyle(
