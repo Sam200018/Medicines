@@ -6,6 +6,7 @@ class PillsInput extends StatelessWidget {
   final bool obscureText;
   final String labelText;
   final String errorText;
+  final Function(String)? onChanged;
 
   const PillsInput({
     super.key,
@@ -14,6 +15,7 @@ class PillsInput extends StatelessWidget {
     this.obscureText = false,
     required this.labelText,
     required this.errorText,
+    this.onChanged,
   });
 
   @override
@@ -27,6 +29,7 @@ class PillsInput extends StatelessWidget {
         labelText: labelText,
         errorText: errorText.isNotEmpty ? errorText : null,
       ),
+      onChanged: onChanged,
     );
   }
 }
