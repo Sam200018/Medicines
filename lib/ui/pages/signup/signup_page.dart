@@ -5,6 +5,7 @@ import 'package:medicines/config/constants/colors.dart';
 import 'package:medicines/config/router/router.dart';
 import 'package:medicines/ui/pages/login/widgets/pills_button.dart';
 import 'package:medicines/ui/pages/login/widgets/pills_input.dart';
+import 'package:medicines/ui/pages/login/widgets/pills_snackbar.dart';
 import 'package:medicines/ui/pages/login/widgets/pills_text_button.dart';
 import 'package:medicines/ui/pages/signup/widgets/mini_logo_pills.dart';
 
@@ -27,78 +28,101 @@ class SignupPage extends StatelessWidget {
               },
             ),
           ),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 30, left: 30, right: 30),
-              child: Column(
-                children: [
-                  const MiniLogoPills(),
-                  const SizedBox(height: 20),
-                  PillsInput(
-                    textController: context.read<SignupBloc>().firstNameCtrl,
-                    textInputType: TextInputType.name,
-                    labelText: "Nombre",
-                    errorText: state.nameError,
-                    onChanged: (name) {
-                      context.read<SignupBloc>().add(const NameChanged());
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  PillsInput(
-                    textController: context.read<SignupBloc>().lastNameCtrl,
-                    textInputType: TextInputType.name,
-                    labelText: "Apellido",
-                    errorText: state.lastNameError,
-                    onChanged: (lastName) {
-                      context.read<SignupBloc>().add(const LastNameChanged());
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  PillsInput(
-                    textController: context.read<SignupBloc>().emailCtrl,
-                    textInputType: TextInputType.emailAddress,
-                    labelText: "Email",
-                    errorText: state.emailError,
-                    onChanged: (email) {
-                      context.read<SignupBloc>().add(const EmailChanged());
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  PillsInput(
-                    textController: context.read<SignupBloc>().passwordCtrl,
-                    textInputType: TextInputType.emailAddress,
-                    labelText: "Password",
-                    obscureText: true,
-                    errorText: state.passwordError,
-                    onChanged: (password) {
-                      context.read<SignupBloc>().add(const PasswordChanged());
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  PillsInput(
-                    textController:
-                        context.read<SignupBloc>().verifyPasswordCtrl,
-                    textInputType: TextInputType.emailAddress,
-                    obscureText: true,
-                    labelText: "Confirmar password",
-                    errorText: state.verPasswordError,
-                    onChanged: (verPassword) {
-                      context
-                          .read<SignupBloc>()
-                          .add(const VerifiedPasswordChanged());
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  PillsButton(
-                    onPress:
-                        isSignupButtonEnable(state, context) ? () {
-
-                        } : null,
-                    text: "Crear cuenta",
-                    height: 60,
-                    color: mainButton,
-                  ),
-                ],
+          body: BlocListener<SignupBloc, SignupState>(
+            listener: (context, state) {
+              if (state.isFailure) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(PillsSnackbar(message: state.errorMessage));
+              }
+              if (state.isSuccess) {
+                ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    PillsSnackbar(
+                      message: "Usuario creado",
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                context.go(MedicinesRouter.login);
+              }
+            },
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 30, left: 30, right: 30),
+                child: Column(
+                  children: [
+                    const MiniLogoPills(),
+                    const SizedBox(height: 20),
+                    PillsInput(
+                      textController: context.read<SignupBloc>().firstNameCtrl,
+                      textInputType: TextInputType.name,
+                      labelText: "Nombre",
+                      errorText: state.nameError,
+                      onChanged: (name) {
+                        context.read<SignupBloc>().add(const NameChanged());
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    PillsInput(
+                      textController: context.read<SignupBloc>().lastNameCtrl,
+                      textInputType: TextInputType.name,
+                      labelText: "Apellido",
+                      errorText: state.lastNameError,
+                      onChanged: (lastName) {
+                        context.read<SignupBloc>().add(const LastNameChanged());
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    PillsInput(
+                      textController: context.read<SignupBloc>().emailCtrl,
+                      textInputType: TextInputType.emailAddress,
+                      labelText: "Email",
+                      errorText: state.emailError,
+                      onChanged: (email) {
+                        context.read<SignupBloc>().add(const EmailChanged());
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    PillsInput(
+                      textController: context.read<SignupBloc>().passwordCtrl,
+                      textInputType: TextInputType.emailAddress,
+                      labelText: "Password",
+                      obscureText: true,
+                      errorText: state.passwordError,
+                      onChanged: (password) {
+                        context.read<SignupBloc>().add(const PasswordChanged());
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    PillsInput(
+                      textController:
+                          context.read<SignupBloc>().verifyPasswordCtrl,
+                      textInputType: TextInputType.emailAddress,
+                      obscureText: true,
+                      labelText: "Confirmar password",
+                      errorText: state.verPasswordError,
+                      onChanged: (verPassword) {
+                        context
+                            .read<SignupBloc>()
+                            .add(const VerifiedPasswordChanged());
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    PillsButton(
+                      onPress: isSignupButtonEnable(state, context)
+                          ? () {
+                              context
+                                  .read<SignupBloc>()
+                                  .add(const SubmittingForm());
+                            }
+                          : null,
+                      text: "Crear cuenta",
+                      height: 60,
+                      color: mainButton,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -111,6 +135,7 @@ class SignupPage extends StatelessWidget {
     final bloc = context.read<SignupBloc>();
 
     return state.isFormValid &&
+        !state.isFailure &&
         !state.isSubmitting &&
         bloc.firstNameCtrl.text.isNotEmpty &&
         bloc.lastNameCtrl.text.isNotEmpty &&

@@ -1,9 +1,12 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:medicines/ui/pages/utils/validators.dart';
+
+import '../../../../domain/repositories/auth_repository.dart';
 
 part 'signup_event.dart';
 
@@ -16,7 +19,9 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
       passwordCtrl = TextEditingController(),
       verifyPasswordCtrl = TextEditingController();
 
-  SignupBloc() : super(SignupState.empty()) {
+  final AuthRepository authRepository;
+
+  SignupBloc(this.authRepository) : super(SignupState.empty()) {
     on<NameChanged>(onNameChangedToState);
     on<LastNameChanged>(onLastNameChangedToState);
     on<EmailChanged>(onEmailChangedToState);
@@ -86,7 +91,22 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
             (!isVerPassEquals) ? "Las contraseñas no coinciden" : ""));
   }
 
-  Future onSubmittingFormToState(SubmittingForm event, Emitter<SignupState> emit) async {
-
+  Future onSubmittingFormToState(
+      SubmittingForm event, Emitter<SignupState> emit) async {
+    try {
+      FormData formData = FormData.fromMap({
+        "name": firstNameCtrl.text,
+        "last_name": lastNameCtrl.text,
+        "email": emailCtrl.text,
+        "password": passwordCtrl.text,
+      });
+      var message = await authRepository.signup(formData);
+      if (message.isNotEmpty) {
+        emit(SignupState.success());
+      }
+    } catch (e) {
+      print("error bloc: $e");
+      emit(SignupState.failure(e.toString()));
+    }
   }
 }
