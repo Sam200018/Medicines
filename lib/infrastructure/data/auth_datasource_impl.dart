@@ -12,10 +12,22 @@ class AuthDataSourceImpl implements AuthDataSource {
   @override
   Future<String> signup(FormData formData) async {
     try {
-      final response = await dio.request("/createUser",
+      final response = await dio.request("createUser",
           options: Options(method: "POST"), data: formData);
       final data = jsonDecode(response.data);
       return data["message"];
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<String> login(FormData formData) async {
+    try {
+      final response = await dio.request("login",
+          options: Options(method: "Get"), data: formData);
+      final data = jsonDecode(response.data);
+      return data["token"];
     } catch (e) {
       rethrow;
     }
