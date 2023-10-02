@@ -93,6 +93,7 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
 
   Future onSubmittingFormToState(
       SubmittingForm event, Emitter<SignupState> emit) async {
+      emit(SignupState.loading());
     try {
       FormData formData = FormData.fromMap({
         "name": firstNameCtrl.text,
@@ -103,9 +104,13 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
       var message = await authRepository.signup(formData);
       if (message.isNotEmpty) {
         emit(SignupState.success());
+        firstNameCtrl.clear();
+        lastNameCtrl.clear();
+        emailCtrl.clear();
+        passwordCtrl.clear();
+        verifyPasswordCtrl.clear();
       }
     } catch (e) {
-      print("error bloc: $e");
       emit(SignupState.failure(e.toString()));
     }
   }
