@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:medicines/config/constants/environment.dart';
 import 'package:medicines/infrastructure/repositories/auth_repository_impl.dart';
 import 'package:medicines/medicines_app.dart';
@@ -14,7 +15,6 @@ Future<void> main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await dotenv.load(fileName: ".env");
 
-
   runApp(
     MultiRepositoryProvider(
       providers: [
@@ -25,12 +25,16 @@ Future<void> main() async {
             ),
           ),
         ),
+        RepositoryProvider<FlutterSecureStorage>(
+            create: (context) => const FlutterSecureStorage()),
         RepositoryProvider<AuthDataSourceImpl>(
           create: (context) => AuthDataSourceImpl(context.read<Dio>()),
         ),
         RepositoryProvider<AuthRepositoryImpl>(
-          create: (context) =>
-              AuthRepositoryImpl(context.read<AuthDataSourceImpl>()),
+          create: (context) => AuthRepositoryImpl(
+            authDataSource: context.read<AuthDataSourceImpl>(),
+            flutterSecureStorage: context.read<FlutterSecureStorage>(),
+          ),
         ),
       ],
       child: const MedicinesApp(),

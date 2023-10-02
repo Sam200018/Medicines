@@ -3,8 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:medicines/config/router/router.dart';
 import 'package:medicines/config/theme/theme.dart';
-import 'package:medicines/infrastructure/repositories/auth_repository_impl.dart';
-import 'package:medicines/ui/pages/signup/Bloc/signup_bloc.dart';
+import 'package:medicines/ui/pages/home/auth/auth_bloc.dart';
+
+import 'infrastructure/repositories/auth_repository_impl.dart';
 
 class MedicinesApp extends StatelessWidget {
   const MedicinesApp({super.key});
@@ -12,12 +13,8 @@ class MedicinesApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     FlutterNativeSplash.remove();
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider<SignupBloc>(
-            create: (context) =>
-                SignupBloc(context.read<AuthRepositoryImpl>())),
-      ],
+    return BlocProvider(
+      create: (context) => AuthBloc(context.read<AuthRepositoryImpl>()),
       child: MaterialApp.router(
         title: "Medicines",
         debugShowCheckedModeBanner: false,
