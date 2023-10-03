@@ -1,10 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:medicines/config/router/router_notifier.dart';
 import 'package:medicines/infrastructure/repositories/auth_repository_impl.dart';
+import 'package:medicines/ui/pages/home/auth/auth_bloc.dart';
 import 'package:medicines/ui/pages/login/bloc/login_bloc.dart';
 import 'package:medicines/ui/pages/login/login_page.dart';
 import 'package:medicines/ui/pages/signup/Bloc/signup_bloc.dart';
 import 'package:medicines/ui/pages/signup/signup_page.dart';
+
+import '../../ui/pages/home/home_page.dart';
 
 class MedicinesRouter {
   static String home = "/";
@@ -12,22 +16,40 @@ class MedicinesRouter {
   static String signup = "/signup";
 
   GoRouter router = GoRouter(
-    initialLocation: login,
-    routes: [
-      GoRoute(
-        path: login,
-        builder: (context, state) => BlocProvider<LoginBloc>(
+      initialLocation: login,
+      refreshListenable: AuthStateNotifier(),
+      routes: [
+        GoRoute(
+          path: login,
+          builder: (context, state) => BlocProvider<LoginBloc>(
             create: (context) => LoginBloc(context.read<AuthRepositoryImpl>()),
             child: const LoginPage(),
           ),
-      ),
-      GoRoute(
-        path: signup,
-        builder: (context, state) => BlocProvider<SignupBloc>(
-          create: (context) => SignupBloc(context.read<AuthRepositoryImpl>()),
-          child: const SignupPage(),
         ),
-      ),
-    ],
-  );
+        GoRoute(
+          path: signup,
+          builder: (context, state) => BlocProvider<SignupBloc>(
+            create: (context) => SignupBloc(context.read<AuthRepositoryImpl>()),
+            child: const SignupPage(),
+          ),
+        ),
+        GoRoute(path: home, builder: (context, state) => const HomePage()),
+      ],
+      redirect: (context, state) {
+        final isGoingTo = state.matchedLocation;
+        var authStatus = context.read<AuthBloc>().state.status;
+        if (authStatus == AuthenticationStatus.unauthenticated) {
+          if (isGoingTo == login) return null;
+
+          return login;
+        }
+
+        if (authStatus == AuthenticationStatus.authenticated) {
+          if (isGoingTo == login) return home;
+
+          return null;
+        }
+
+        return null;
+      });
 }
