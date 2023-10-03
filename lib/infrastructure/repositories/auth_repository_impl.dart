@@ -31,4 +31,14 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<void> saveEmail(String email) =>
       flutterSecureStorage.write(key: "Email", value: email);
+
+  @override
+  Future<String> checkStatus(String token, String email) =>
+      authDataSource.checkStatus(token, email);
+
+  @override
+  Future<void> deleteEmail() => flutterSecureStorage.delete(key: "Email");
+
+  @override
+  Future<void> deleteToken() => flutterSecureStorage.delete(key: "Token");
 }

@@ -25,9 +25,26 @@ class AuthDataSourceImpl implements AuthDataSource {
   Future<String> login(FormData formData) async {
     try {
       final response = await dio.request("login",
-          options: Options(method: "Get"), data: formData);
+          options: Options(method: "GET"), data: formData);
       final data = jsonDecode(response.data);
       return data["token"];
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<String> checkStatus(String token, String email) async {
+    try {
+      dio.options.headers["Authorization"] = "Bearer $token";
+      final FormData formData= FormData.fromMap({
+        "email":email
+      });
+
+      final response = await dio.request("api/check-status",
+          options: Options(method: "GET"), data: formData);
+      final data = jsonDecode(response.data);
+      return data["updated_token"];
     } catch (e) {
       rethrow;
     }

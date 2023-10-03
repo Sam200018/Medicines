@@ -9,7 +9,13 @@ abstract class AuthRepository {
 
   Future<String?> getToken();
 
+  Future<void> deleteToken();
+
+  Future<void> deleteEmail();
+
   Future<void> saveEmail(String email);
 
   Future<String?> getEmail();
+
+  Future<String> checkStatus(String token, String email);
 }
