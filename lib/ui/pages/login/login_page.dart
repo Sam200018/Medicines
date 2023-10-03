@@ -98,7 +98,7 @@ class LoginPage extends StatelessWidget {
                                   .add(SubmittingForm(authenticated: () {
                                 context
                                     .read<AuthBloc>()
-                                    .add(const AuthenticationUserChanged());
+                                    .add(const UserChanged());
                               }));
                             }
                           : null,
