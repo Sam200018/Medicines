@@ -12,14 +12,19 @@ class MedicinesApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    FlutterNativeSplash.remove();
     return BlocProvider(
-      create: (context) => AuthBloc(context.read<AuthRepositoryImpl>()),
-      child: MaterialApp.router(
-        title: "Medicines",
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme().getTheme(),
-        routerConfig: MedicinesRouter().router,
+      create: (context) => AuthBloc(context.read<AuthRepositoryImpl>())
+        ..add(const CheckStatus()),
+      child: BlocBuilder<AuthBloc, AuthState>(
+        builder: (context, state) {
+          FlutterNativeSplash.remove();
+          return MaterialApp.router(
+            title: "Medicines",
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme().getTheme(),
+            routerConfig: MedicinesRouter().router,
+          );
+        },
       ),
     );
   }
