@@ -1,9 +1,11 @@
 import 'package:dio/src/form_data.dart';
 
+import '../entities/auth_response.dart';
+
 abstract class AuthRepository {
   Future<String> signup(FormData formData);
 
-  Future<String> login(FormData formData);
+  Future<AuthResponse> login(FormData formData);
 
   Future<void> saveToken(String token);
 
@@ -11,11 +13,11 @@ abstract class AuthRepository {
 
   Future<void> deleteToken();
 
-  Future<void> deleteEmail();
+  Future<void> saveUser(String user);
 
-  Future<void> saveEmail(String email);
+  Future<String?> getUser();
 
-  Future<String?> getEmail();
+  Future<void> deleteUser();
 
-  Future<String> checkStatus(String token, String email);
+  Future<AuthResponse> checkStatus(String token, String email);
 }

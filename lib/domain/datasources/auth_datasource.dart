@@ -1,9 +1,10 @@
 import 'package:dio/src/form_data.dart';
+import 'package:medicines/domain/entities/auth_response.dart';
 
 abstract class AuthDataSource {
   Future<String> signup(FormData formData);
 
-  Future<String> login(FormData formData);
+  Future<AuthResponse> login(FormData formData);
 
-  Future<String> checkStatus(String token, String email);
+  Future<AuthResponse> checkStatus(String token, String email);
 }

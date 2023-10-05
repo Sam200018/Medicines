@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:medicines/domain/entities/auth_response.dart';
 
 import '../../domain/datasources/auth_datasource.dart';
 
@@ -22,29 +23,31 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
-  Future<String> login(FormData formData) async {
+  Future<AuthResponse> login(FormData formData) async {
     try {
       final response = await dio.request("login",
           options: Options(method: "GET"), data: formData);
       final data = jsonDecode(response.data);
-      return data["token"];
+      final authResponse = AuthResponse.fromJson(data);
+      return authResponse;
     } catch (e) {
       rethrow;
     }
   }
 
   @override
-  Future<String> checkStatus(String token, String email) async {
+  Future<AuthResponse> checkStatus(String token, String email) async {
     try {
       dio.options.headers["Authorization"] = "Bearer $token";
-      final FormData formData= FormData.fromMap({
-        "email":email
-      });
+      final FormData formData = FormData.fromMap({"email": email});
 
       final response = await dio.request("api/check-status",
           options: Options(method: "GET"), data: formData);
       final data = jsonDecode(response.data);
-      return data["updated_token"];
+      final authResponse = AuthResponse.fromJson(data);
+      print(authResponse.user);
+      print(authResponse.token);
+      return authResponse;
     } catch (e) {
       rethrow;
     }

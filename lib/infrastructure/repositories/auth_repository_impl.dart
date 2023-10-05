@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:medicines/domain/datasources/auth_datasource.dart';
+import 'package:medicines/domain/entities/auth_response.dart';
 import 'package:medicines/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -16,7 +17,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<String> signup(FormData formData) => authDataSource.signup(formData);
 
   @override
-  Future<String> login(FormData formData) => authDataSource.login(formData);
+  Future<AuthResponse> login(FormData formData) => authDataSource.login(formData);
 
   @override
   Future<String?> getToken() => flutterSecureStorage.read(key: "Token");
@@ -25,20 +26,22 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> saveToken(String token) =>
       flutterSecureStorage.write(key: "Token", value: token);
 
-  @override
-  Future<String?> getEmail() => flutterSecureStorage.read(key: "Email");
+
 
   @override
-  Future<void> saveEmail(String email) =>
-      flutterSecureStorage.write(key: "Email", value: email);
-
-  @override
-  Future<String> checkStatus(String token, String email) =>
+  Future<AuthResponse> checkStatus(String token, String email) =>
       authDataSource.checkStatus(token, email);
 
-  @override
-  Future<void> deleteEmail() => flutterSecureStorage.delete(key: "Email");
 
   @override
   Future<void> deleteToken() => flutterSecureStorage.delete(key: "Token");
+
+  @override
+  Future<String?> getUser() =>flutterSecureStorage.read(key: "User");
+
+  @override
+  Future<void> saveUser(String user)=> flutterSecureStorage.write(key: "User", value: user);
+
+  @override
+  Future<void> deleteUser()=> flutterSecureStorage.delete(key: "User");
 }
