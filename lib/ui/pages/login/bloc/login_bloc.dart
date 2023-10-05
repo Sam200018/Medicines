@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
@@ -53,10 +54,15 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         "email": emailCtrl.text,
         "password": passwordCtrl.text,
       });
-      var token = await authRepository.login(formData);
-      if (token.isNotEmpty) {
-        authRepository.saveToken(token);
-        authRepository.saveEmail(emailCtrl.text);
+      var authResponse = await authRepository.login(formData);
+      if (authResponse.token.isNotEmpty) {
+        authRepository.saveToken(authResponse.token);
+        final userMap = authResponse.user.toJson();
+
+        String userJson = jsonEncode(userMap);
+
+        authRepository.saveUser(userJson);
+
         emit(LoginState.success());
         event.authenticated();
       }
