@@ -45,7 +45,6 @@ class AuthDataSourceImpl implements AuthDataSource {
           options: Options(method: "GET"), data: formData);
       final data = jsonDecode(response.data);
       final authResponse = AuthResponse.fromJson(data);
-      print(authResponse.user);
       print(authResponse.token);
       return authResponse;
     } catch (e) {
