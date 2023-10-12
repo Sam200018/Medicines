@@ -39,7 +39,8 @@ class MedicinesRouter {
         GoRoute(
           path: home,
           builder: (context, state) => BlocProvider<HomeBloc>(
-            create: (context) => HomeBloc(),
+            create: (context) => HomeBloc(context.read<AuthRepositoryImpl>())
+              ..add(HomeCheckingEvent()),
             child: const HomePage(),
           ),
         ),
@@ -62,7 +63,9 @@ class MedicinesRouter {
         }
 
         if (authStatus == AuthenticationStatus.authenticated) {
-          if (isGoingTo == login || isGoingTo == signup || isGoingTo == loading) return home;
+          if (isGoingTo == login || isGoingTo == signup || isGoingTo == loading) {
+            return home;
+          }
         }
 
         return null;
