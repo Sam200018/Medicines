@@ -56,7 +56,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
         emit(const AuthState.authenticated());
       } catch (e) {
-        print(e);
         authRepository.deleteUser();
         authRepository.deleteToken();
         emit(const AuthState.unathenticated());
