@@ -5,11 +5,15 @@ abstract class HomeEvent extends Equatable {
 }
 
 class HomeCheckingEvent extends HomeEvent {
+  final String message;
+
+  const HomeCheckingEvent(this.message);
+
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [message];
 }
 
-class CreatingHome extends HomeEvent {
+class CreateHome extends HomeEvent {
   @override
   List<Object?> get props => [];
 }
@@ -19,9 +23,7 @@ class JoinHome extends HomeEvent {
   List<Object?> get props => [];
 }
 
-class OutHome extends HomeEvent {
+class ExitHome extends HomeEvent {
   @override
   List<Object?> get props => [];
 }
-
-
