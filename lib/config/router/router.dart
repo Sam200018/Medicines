@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medicines/config/router/router_notifier.dart';
 import 'package:medicines/infrastructure/repositories/auth_repository_impl.dart';
+import 'package:medicines/infrastructure/repositories/home_repository_impl.dart';
 import 'package:medicines/ui/pages/Loading/loading_page.dart';
 import 'package:medicines/ui/pages/home/auth/auth_bloc.dart';
 import 'package:medicines/ui/pages/home/home_bloc/home_bloc.dart';
@@ -39,8 +40,10 @@ class MedicinesRouter {
         GoRoute(
           path: home,
           builder: (context, state) => BlocProvider<HomeBloc>(
-            create: (context) => HomeBloc(context.read<AuthRepositoryImpl>())
-              ..add(HomeCheckingEvent()),
+            create: (context) => HomeBloc(
+              context.read<AuthRepositoryImpl>(),
+              context.read<HomeRepositoryImpl>(),
+            )..add(const HomeCheckingEvent("Checking...")),
             child: const HomePage(),
           ),
         ),
@@ -63,7 +66,9 @@ class MedicinesRouter {
         }
 
         if (authStatus == AuthenticationStatus.authenticated) {
-          if (isGoingTo == login || isGoingTo == signup || isGoingTo == loading) {
+          if (isGoingTo == login ||
+              isGoingTo == signup ||
+              isGoingTo == loading) {
             return home;
           }
         }
