@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:medicines/config/constants/colors.dart';
+import 'package:medicines/config/router/router.dart';
 import 'package:medicines/ui/pages/home/widgets/pills_button_icon.dart';
 
 import '../home_bloc/home_bloc.dart';
@@ -41,7 +43,9 @@ class NotAtHomePage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             PillsButtonIcon(
-                onPress: () {},
+                onPress: () {
+                  context.push(MedicinesRouter.readCode);
+                },
                 text: "Unirse a una casa",
                 height: 100,
                 color: joinHouseButton,
