@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:medicines/config/constants/colors.dart';
-import 'package:medicines/ui/pages/login/widgets/pills_button.dart';
+import 'package:go_router/go_router.dart';
+import 'package:medicines/config/router/router.dart';
+import 'package:medicines/ui/pages/home/at_home/widgets/medicine_list.dart';
+import 'package:medicines/ui/pages/home/widgets/pills_drawer.dart';
+import 'package:medicines/ui/pages/home/widgets/pills_floating_action_button.dart';
 import 'package:medicines/ui/pages/login/widgets/pills_input.dart';
-
-import '../home_bloc/home_bloc.dart';
 
 class AtHomePage extends StatelessWidget {
   const AtHomePage({super.key});
@@ -22,20 +22,31 @@ class AtHomePage extends StatelessWidget {
               errorText: ""),
         ),
       ),
-      endDrawer: Drawer(
-        child: ListView(),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+      endDrawer: const PillsDrawer(),
+      body: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 30.0),
         child: Center(
-          child: PillsButton(
-            onPress: () {
-              context.read<HomeBloc>().add(ExitHome());
-            },
-            text: "Salirse de la casa",
-            height: 40,
-            color: mainButton,
-          ),
+          child: MedicineList()
+        ),
+      ),
+      floatingActionButton: SizedBox(
+        width: 180.0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            PillsFloatingActionButton(
+              tooltip: "FAB 1",
+              onPress: () {
+                context.push(MedicinesRouter.addMember);
+              },
+              label: const Icon(Icons.qr_code),
+            ),
+            PillsFloatingActionButton(
+              tooltip: "FAB 2",
+              onPress: () {},
+              label: const Icon(Icons.medical_services_outlined),
+            ),
+          ],
         ),
       ),
     );
