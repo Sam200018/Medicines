@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:medicines/config/router/router_notifier.dart';
 import 'package:medicines/infrastructure/repositories/auth_repository_impl.dart';
 import 'package:medicines/infrastructure/repositories/home_repository_impl.dart';
+import 'package:medicines/infrastructure/repositories/medicine_repository_impl.dart';
 import 'package:medicines/ui/pages/Loading/loading_page.dart';
 import 'package:medicines/ui/pages/add_member_code/add_member_page.dart';
 import 'package:medicines/ui/pages/add_member_code/bloc/qr_bloc.dart';
@@ -10,11 +11,13 @@ import 'package:medicines/ui/pages/home/auth/auth_bloc.dart';
 import 'package:medicines/ui/pages/home/home_bloc/home_bloc.dart';
 import 'package:medicines/ui/pages/login/bloc/login_bloc.dart';
 import 'package:medicines/ui/pages/login/login_page.dart';
+import 'package:medicines/ui/pages/medicine/bloc/medicine_bloc.dart';
 import 'package:medicines/ui/pages/read_code/read_code_page.dart';
 import 'package:medicines/ui/pages/signup/Bloc/signup_bloc.dart';
 import 'package:medicines/ui/pages/signup/signup_page.dart';
 
 import '../../ui/pages/home/home_page.dart';
+import '../../ui/pages/medicine/medicine_page.dart';
 
 class MedicinesRouter {
   static String home = "/";
@@ -23,6 +26,7 @@ class MedicinesRouter {
   static String loading = "/loading";
   static String addMember = "/add_member";
   static String readCode = "/read_code";
+  static String medicine = "/medicine";
 
   GoRouter router = GoRouter(
       initialLocation: loading,
@@ -63,9 +67,25 @@ class MedicinesRouter {
             child: const AddMemberPage(),
           ),
         ),
-        GoRoute(path: readCode, builder: (context, state) {
-          return const ReadCodePage();
-        }),
+        GoRoute(
+            path: readCode,
+            builder: (context, state) {
+              return const ReadCodePage();
+            }),
+        GoRoute(
+          path: medicine,
+          builder: (context, state) {
+            return BlocProvider<MedicineBloc>(
+              create: (context) {
+                return MedicineBloc(
+                  context.read<AuthRepositoryImpl>(),
+                  context.read<MedicineRepositoryImpl>(),
+                );
+              },
+              child: const MedicinePage(),
+            );
+          },
+        ),
       ],
       redirect: (context, state) {
         final isGoingTo = state.matchedLocation;
