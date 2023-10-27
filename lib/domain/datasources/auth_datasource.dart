@@ -1,4 +1,4 @@
-import 'package:dio/src/form_data.dart';
+import 'package:dio/dio.dart';
 import 'package:medicines/domain/entities/auth_response.dart';
 
 abstract class AuthDataSource {

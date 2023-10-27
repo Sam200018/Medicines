@@ -17,7 +17,8 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<String> signup(FormData formData) => authDataSource.signup(formData);
 
   @override
-  Future<AuthResponse> login(FormData formData) => authDataSource.login(formData);
+  Future<AuthResponse> login(FormData formData) =>
+      authDataSource.login(formData);
 
   @override
   Future<String?> getToken() => flutterSecureStorage.read(key: "Token");
@@ -26,22 +27,20 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> saveToken(String token) =>
       flutterSecureStorage.write(key: "Token", value: token);
 
-
-
   @override
   Future<AuthResponse> checkStatus(String token, String email) =>
       authDataSource.checkStatus(token, email);
-
 
   @override
   Future<void> deleteToken() => flutterSecureStorage.delete(key: "Token");
 
   @override
-  Future<String?> getUser() =>flutterSecureStorage.read(key: "User");
+  Future<String?> getUser() => flutterSecureStorage.read(key: "User");
 
   @override
-  Future<void> saveUser(String user)=> flutterSecureStorage.write(key: "User", value: user);
+  Future<void> saveUser(String user) =>
+      flutterSecureStorage.write(key: "User", value: user);
 
   @override
-  Future<void> deleteUser()=> flutterSecureStorage.delete(key: "User");
+  Future<void> deleteUser() => flutterSecureStorage.delete(key: "User");
 }
