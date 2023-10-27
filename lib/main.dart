@@ -6,8 +6,10 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:medicines/config/constants/environment.dart';
 import 'package:medicines/infrastructure/data/home_datasource_impl.dart';
+import 'package:medicines/infrastructure/data/medicine_datasource_impl.dart';
 import 'package:medicines/infrastructure/repositories/auth_repository_impl.dart';
 import 'package:medicines/infrastructure/repositories/home_repository_impl.dart';
+import 'package:medicines/infrastructure/repositories/medicine_repository_impl.dart';
 import 'package:medicines/medicines_app.dart';
 
 import 'infrastructure/data/auth_datasource_impl.dart';
@@ -44,6 +46,14 @@ Future<void> main() async {
         RepositoryProvider<HomeRepositoryImpl>(
           create: (context) => HomeRepositoryImpl(
               homeDataSource: context.read<HomeDataSourceImp>()),
+        ),
+        RepositoryProvider<MedicineDataSourceImpl>(
+          create: (context) => MedicineDataSourceImpl(context.read<Dio>()),
+        ),
+        RepositoryProvider<MedicineRepositoryImpl>(
+          create: (context) => MedicineRepositoryImpl(
+            medicineDataSource: context.read<MedicineDataSourceImpl>(),
+          ),
         ),
       ],
       child: const MedicinesApp(),
