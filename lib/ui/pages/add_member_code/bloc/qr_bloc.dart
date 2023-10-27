@@ -25,7 +25,7 @@ class QrBloc extends Bloc<QrEvent, QrState> {
       final user = User.fromJson(data);
       emit(QRSuccess(data: user.houseId.toString()));
     } catch (e) {
-      emit(QRFailed(message: "Lo siento, no es posible mostar QR ahora"));
+      emit(const QRFailed(message: "Lo siento, no es posible mostar QR ahora"));
     }
   }
 }

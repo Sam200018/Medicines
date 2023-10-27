@@ -10,7 +10,6 @@ class AuthStateNotifier extends ChangeNotifier {
 
   authStateProvider(AuthBloc bloc) {
     _blocStream = bloc.stream.listen((event) {
-      print(event);
       notifyListeners();
     });
   }

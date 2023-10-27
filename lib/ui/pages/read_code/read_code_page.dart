@@ -8,7 +8,7 @@ class ReadCodePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Lectura de código QR"),
+        title: const Text("Lectura de código QR"),
       ),
       body: MobileScanner(
         controller: MobileScannerController(

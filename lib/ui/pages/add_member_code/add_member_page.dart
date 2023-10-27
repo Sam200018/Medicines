@@ -14,7 +14,7 @@ class AddMemberPage extends StatelessWidget {
         if (state is QRSuccess) {
           return Scaffold(
             appBar: AppBar(
-              title: Text("Agregar miembro"),
+              title: const Text("Agregar miembro"),
             ),
             body: Padding(
               padding: const EdgeInsets.all(30.0),
@@ -26,7 +26,7 @@ class AddMemberPage extends StatelessWidget {
                     version: QrVersions.auto,
                     size: 400,
                   ),
-                  Text("Muestra este codigo QR a la persona que quieras agregar a tu casa")
+                  const Text("Muestra este codigo QR a la persona que quieras agregar a tu casa")
                 ],
               ),
             ),
@@ -35,7 +35,7 @@ class AddMemberPage extends StatelessWidget {
         if (state is QRFailed) {
           return Scaffold(
             appBar: AppBar(
-              title: Text("Agregar miembro"),
+              title: const Text("Agregar miembro"),
             ),
             body: Center(
               child: Text(state.message),
