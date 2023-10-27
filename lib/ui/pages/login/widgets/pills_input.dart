@@ -6,6 +6,8 @@ class PillsInput extends StatelessWidget {
   final bool obscureText;
   final String labelText;
   final String errorText;
+  final int? minLines;
+  final int? maxLines;
   final Function(String)? onChanged;
 
   const PillsInput({
@@ -16,6 +18,8 @@ class PillsInput extends StatelessWidget {
     required this.labelText,
     required this.errorText,
     this.onChanged,
+    this.minLines,
+    this.maxLines,
   });
 
   @override
@@ -29,6 +33,8 @@ class PillsInput extends StatelessWidget {
         labelText: labelText,
         errorText: errorText.isNotEmpty ? errorText : null,
       ),
+      maxLines: maxLines,
+      minLines: minLines,
       onChanged: onChanged,
     );
   }
