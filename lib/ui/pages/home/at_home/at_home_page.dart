@@ -43,7 +43,9 @@ class AtHomePage extends StatelessWidget {
             ),
             PillsFloatingActionButton(
               tooltip: "FAB 2",
-              onPress: () {},
+              onPress: () {
+                context.push(MedicinesRouter.medicine);
+              },
               label: const Icon(Icons.medical_services_outlined),
             ),
           ],
