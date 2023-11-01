@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:medicines/config/constants/colors.dart';
+import 'package:medicines/ui/pages/home/home_bloc/home_bloc.dart';
 import 'package:medicines/ui/pages/login/widgets/pills_button.dart';
 import 'package:medicines/ui/pages/login/widgets/pills_datepicker.dart';
 import 'package:medicines/ui/pages/login/widgets/pills_input.dart';
@@ -40,6 +41,12 @@ class MedicinePage extends StatelessWidget {
         ),
         body: BlocBuilder<MedicineBloc, MedicineState>(
           builder: (context, state) {
+            if (state.isSubmitting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(10.0),
@@ -108,11 +115,12 @@ class MedicinePage extends StatelessWidget {
                     const SizedBox(height: 40.0),
                     PillsButton(
                         onPress: () {
-                          context
-                              .read<MedicineBloc>()
-                              .add(SubmittedForm(returnToHome: () {
-                            context.pop();
-                          }));
+                          context.read<MedicineBloc>().add(SubmittedForm(
+                            returnToHome: () {
+                              context.pop();
+                              context.read<HomeBloc>().add(const HomeCheckingEvent(null));
+                            },
+                          ));
                         },
                         text: "Guardar",
                         height: 40,
