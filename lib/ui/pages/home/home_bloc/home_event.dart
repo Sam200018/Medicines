@@ -5,7 +5,7 @@ abstract class HomeEvent extends Equatable {
 }
 
 class HomeCheckingEvent extends HomeEvent {
-  final String message;
+  final String? message;
 
   const HomeCheckingEvent(this.message);
 

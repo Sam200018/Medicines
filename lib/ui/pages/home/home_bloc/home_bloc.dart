@@ -4,9 +4,11 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:medicines/domain/entities/medicine.dart';
 import 'package:medicines/domain/entities/user.dart';
 import 'package:medicines/infrastructure/repositories/auth_repository_impl.dart';
 import 'package:medicines/infrastructure/repositories/home_repository_impl.dart';
+import 'package:medicines/infrastructure/repositories/medicine_repository_impl.dart';
 
 part 'home_event.dart';
 
@@ -15,9 +17,11 @@ part 'home_state.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final AuthRepositoryImpl authRepositoryImpl;
   final HomeRepositoryImpl homeRepositoryImpl;
+  final MedicineRepositoryImpl medicineRepositoryImpl;
 
-  HomeBloc(this.authRepositoryImpl, this.homeRepositoryImpl)
-      : super(const HomeChecking("")) {
+
+  HomeBloc(this.authRepositoryImpl, this.homeRepositoryImpl, this.medicineRepositoryImpl)
+      : super(const HomeChecking(null)) {
     on<HomeCheckingEvent>(onHomeCheckingToState);
     on<ExitHome>(onOutHomeToState);
     on<CreateHome>(onCreateHomeToState);
@@ -31,7 +35,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     if (user.houseId == 0) {
       emit(NotAtHome(event.message, false, true));
     } else {
-      emit(AtHome(event.message, false, true));
+      final medicineListResponse = await medicineRepositoryImpl.getAllMedicines(user.houseId);
+      emit(AtHome(event.message, false, true,medicineListResponse.medicines));
     }
   }
 
@@ -52,7 +57,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       authRepositoryImpl.saveUser(userJson);
       add(HomeCheckingEvent(homeResponse.message));
     } catch (e) {
-      emit(AtHome(e.toString(), true, false));
+      emit(AtHome(e.toString(), true, false, const []));
     }
   }
 

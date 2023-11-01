@@ -17,11 +17,13 @@ class HomeChecking extends HomeState {
 }
 
 class AtHome extends HomeState {
-  const AtHome(String? message, bool? isFailure, bool? isSuccess)
+  final List<Medicine> medicines;
+
+  const AtHome(String? message, bool? isFailure, bool? isSuccess, this.medicines)
       : super(message, isSuccess: isSuccess, isFailure: isFailure);
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [medicines];
 }
 
 class NotAtHome extends HomeState {
