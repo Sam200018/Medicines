@@ -33,7 +33,7 @@ class HomePage extends StatelessWidget {
       child: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           if (state is AtHome) {
-            return const AtHomePage();
+            return AtHomePage(medicines: state.medicines);
           }
           if (state is NotAtHome) {
             return const NotAtHomePage();
