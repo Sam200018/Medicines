@@ -5,6 +5,9 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
+import 'package:medicines/domain/entities/medicine.dart';
+import 'package:medicines/domain/entities/medicine_response.dart';
 import 'package:medicines/infrastructure/repositories/medicine_repository_impl.dart';
 
 import '../../../../domain/entities/user.dart';
@@ -20,6 +23,7 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
   final amountCtrl = TextEditingController();
   final dateCtrl = TextEditingController();
   final compoundsCtrl = TextEditingController();
+  Medicine? medicine;
 
   final AuthRepositoryImpl authRepositoryImpl;
   final MedicineRepositoryImpl medicineRepositoryImpl;
@@ -32,6 +36,7 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
     on<DateChanged>(onDateChangedToState);
     on<CompoundsChanged>(onCompoundsToState);
     on<SubmittedForm>(onSubmittedFormToState);
+    on<LoadMedicine>(onLoadMedicine);
   }
 
   void onNameChangedToState(NameChanged event, Emitter<MedicineState> emit) {
@@ -94,10 +99,39 @@ class MedicineBloc extends Bloc<MedicineEvent, MedicineState> {
         "activeCompounds": compoundsCtrl.text,
         "houseId": user.houseId
       });
-      final medicineResponse =
-          await medicineRepositoryImpl.saveMedicine(formData);
-      emit(MedicineState.success(medicineResponse.message));
+      final MedicineResponse response;
+
+
+      if (medicine != null) {
+
+        response =
+            await medicineRepositoryImpl.updateMedicine(formData, medicine!.id!);
+      } else {
+        response = await medicineRepositoryImpl.saveMedicine(formData);
+      }
+      emit(MedicineState.success(response.message));
       event.returnToHome();
+    } catch (e) {
+      emit(MedicineState.failure(e.toString()));
+    }
+  }
+
+  Future<void> onLoadMedicine(
+      LoadMedicine event, Emitter<MedicineState> emit) async {
+    emit(MedicineState.submitting());
+    try {
+      final medicineResponse =
+          await medicineRepositoryImpl.getMedicineById(event.id);
+
+      medicine = medicineResponse.medicine;
+      nameCtrl.text = medicine!.name;
+      doseCtrl.text = medicine!.dose.toString();
+      amountCtrl.text = medicine!.amountAvailable.toString();
+
+      final formattedDate = DateFormat("dd-MM-yyyy").format(medicine!.dueDate);
+      dateCtrl.text = formattedDate;
+      compoundsCtrl.text = medicine!.activeCompounds;
+      emit(MedicineState.success(medicineResponse.message));
     } catch (e) {
       emit(MedicineState.failure(e.toString()));
     }

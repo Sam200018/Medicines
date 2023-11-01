@@ -29,6 +29,16 @@ class CompoundsChanged extends MedicineEvent {
   List<Object?> get props => [];
 }
 
+class LoadMedicine extends MedicineEvent{
+  final String id;
+
+  const LoadMedicine(this.id);
+
+  @override
+  List<Object?> get props => [id];
+}
+
+
 class SubmittedForm extends MedicineEvent {
   final VoidCallback returnToHome;
 
@@ -37,3 +47,4 @@ class SubmittedForm extends MedicineEvent {
   @override
   List<Object?> get props => [returnToHome];
 }
+
