@@ -90,6 +90,8 @@ class SignupPage extends StatelessWidget {
                       labelText: "Password",
                       obscureText: true,
                       errorText: state.passwordError,
+                      maxLines: 1,
+                      minLines: 1,
                       onChanged: (password) {
                         context.read<SignupBloc>().add(const PasswordChanged());
                       },
@@ -102,6 +104,8 @@ class SignupPage extends StatelessWidget {
                       obscureText: true,
                       labelText: "Confirmar password",
                       errorText: state.verPasswordError,
+                      maxLines: 1,
+                      minLines: 1,
                       onChanged: (verPassword) {
                         context
                             .read<SignupBloc>()

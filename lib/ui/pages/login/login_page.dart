@@ -74,6 +74,8 @@ class LoginPage extends StatelessWidget {
                       obscureText: true,
                       labelText: "Password",
                       errorText: state.passwordError,
+                      maxLines: 1,
+                      minLines: 1,
                       onChanged: (password) {
                         context.read<LoginBloc>().add(const PasswordChanged());
                       },
