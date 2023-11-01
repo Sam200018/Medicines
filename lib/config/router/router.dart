@@ -2,13 +2,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:medicines/config/router/router_notifier.dart';
 import 'package:medicines/infrastructure/repositories/auth_repository_impl.dart';
-import 'package:medicines/infrastructure/repositories/home_repository_impl.dart';
 import 'package:medicines/infrastructure/repositories/medicine_repository_impl.dart';
 import 'package:medicines/ui/pages/Loading/loading_page.dart';
 import 'package:medicines/ui/pages/add_member_code/add_member_page.dart';
 import 'package:medicines/ui/pages/add_member_code/bloc/qr_bloc.dart';
 import 'package:medicines/ui/pages/home/auth/auth_bloc.dart';
-import 'package:medicines/ui/pages/home/home_bloc/home_bloc.dart';
 import 'package:medicines/ui/pages/login/bloc/login_bloc.dart';
 import 'package:medicines/ui/pages/login/login_page.dart';
 import 'package:medicines/ui/pages/medicine/bloc/medicine_bloc.dart';
@@ -48,13 +46,7 @@ class MedicinesRouter {
         ),
         GoRoute(
           path: home,
-          builder: (context, state) => BlocProvider<HomeBloc>(
-            create: (context) => HomeBloc(
-              context.read<AuthRepositoryImpl>(),
-              context.read<HomeRepositoryImpl>(),
-            )..add(const HomeCheckingEvent("Checking...")),
-            child: const HomePage(),
-          ),
+          builder: (context, state) => const HomePage(),
         ),
         GoRoute(
             path: loading, builder: (context, state) => const LoadingPage()),
@@ -76,11 +68,31 @@ class MedicinesRouter {
           path: medicine,
           builder: (context, state) {
             return BlocProvider<MedicineBloc>(
-              create: (context) {
-                return MedicineBloc(
+              create: (context) => MedicineBloc(
                   context.read<AuthRepositoryImpl>(),
                   context.read<MedicineRepositoryImpl>(),
-                );
+                ),
+              child: const MedicinePage(),
+            );
+          },
+        ),
+        GoRoute(
+          path: "$medicine/:id",
+          builder: (context, state) {
+            return BlocProvider<MedicineBloc>(
+              create: (context) {
+                final medicineId = state.pathParameters["id"];
+                if (medicineId == null) {
+                  return MedicineBloc(
+                    context.read<AuthRepositoryImpl>(),
+                    context.read<MedicineRepositoryImpl>(),
+                  );
+                } else {
+                  return MedicineBloc(
+                    context.read<AuthRepositoryImpl>(),
+                    context.read<MedicineRepositoryImpl>(),
+                  )..add(LoadMedicine(medicineId));
+                }
               },
               child: const MedicinePage(),
             );
